@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ventas - EmprendePOS</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <h1>EmprendePOS</h1>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="ventas.html" class="active">Ventas</a></li>
+        <li><a href="inventario.html">Inventario</a></li>
+        <li><a href="clientes.html">Clientes</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="content">
+    <h2>Registrar Venta</h2>
+    <form class="form">
+      <input type="text" placeholder="Nombre del producto" required>
+      <input type="number" placeholder="Cantidad" required>
+      <input type="number" placeholder="Precio unitario" required>
+      <button type="submit" class="btn">Registrar</button>
+    </form>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Cantidad</th>
+          <th>Precio</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Ejemplo 1</td>
+          <td>2</td>
+          <td>$10.000</td>
+          <td>$20.000</td>
+        </tr>
+      </tbody>
+    </table>
+  </main>
+
+  <footer>
+    <p>© 2025 EmprendePOS</p>
+  </footer>
+</body>
+</html>
