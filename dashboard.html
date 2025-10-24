@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dashboard - EmprendePOS</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* Estilos de la animación de bienvenida */
+    .welcome-screen {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: linear-gradient(135deg, #007bff, #00a8ff);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      animation: fadeOut 1s ease forwards;
+      animation-delay: 2.8s;
+    }
+
+    .welcome-screen h1 {
+      font-size: 3rem;
+      letter-spacing: 2px;
+      animation: slideUp 1s ease forwards;
+    }
+
+    .welcome-screen p {
+      font-size: 1.2rem;
+      opacity: 0.8;
+      animation: slideUp 1s ease forwards;
+      animation-delay: 0.4s;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+
+    /* Animación del contenido principal */
+    main {
+      opacity: 0;
+      transform: translateY(40px);
+      animation: fadeInUp 1s ease forwards;
+      animation-delay: 3s;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <script>
+    // Verifica si hay sesión activa
+    if (!sessionStorage.getItem("spos_user")) {
+      window.location.href = "login.html";
+    }
+  </script>
+
+  <!-- Pantalla de bienvenida -->
+  <div class="welcome-screen">
+    <h1>SPORTENIS</h1>
+    <p>Tu tienda deportiva POS</p>
+  </div>
+
+  <header>
+    <div class="logo"><h1>EmprendePOS</h1></div>
+    <nav>
+      <ul>
+        <li><a href="dashboard.html" class="active">Inicio</a></li>
+        <li><a href="ventas.html">Ventas</a></li>
+        <li><a href="inventario.html">Inventario</a></li>
+        <li><a href="graficas.html">Gráficas de ventas</a></li>
+        <li style="margin-left:20px;"><a href="#" id="logoutBtn">Cerrar sesión</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="content" style="display:flex; align-items:center; justify-content:center; flex-direction:column; padding:80px 20px;">
+    <h2 style="font-size:2.8rem; color:#0056b3; margin-bottom:8px;">Bienvenido, <span id="userName"></span></h2>
+    <p style="margin-bottom:20px;">Sistema de gestión POS - <strong>SPORTENIS</strong></p>
+    <p style="max-width:700px; text-align:center; color:#444;">
+      Controla tus ventas, administra tu inventario y visualiza reportes de manera sencilla y rápida.
+      Usa el menú superior para navegar entre las secciones.
+    </p>
+  </main>
+
+  <footer>
+    <p>© 2025 EmprendePOS</p>
+  </footer>
+
+  <script>
+    // Mostrar el nombre del usuario
+    const user = sessionStorage.getItem("spos_user");
+    document.getElementById("userName").textContent = user ? user : "";
+
+    // Botón de cierre de sesión
+    document.getElementById("logoutBtn").addEventListener("click", function(e){
+      e.preventDefault();
+      sessionStorage.removeItem("spos_user");
+      window.location.href = "index.html";
+    });
+  </script>
+</body>
+</html>

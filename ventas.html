@@ -1,57 +1,75 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Ventas - EmprendePOS</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <script>
+    if (!sessionStorage.getItem("spos_user")) {
+      window.location.href = "login.html";
+    }
+  </script>
+
   <header>
-    <div class="logo">
-      <h1>EmprendePOS</h1>
-    </div>
+    <div class="logo"><h1>EmprendePOS</h1></div>
     <nav>
       <ul>
-        <li><a href="index.html">Inicio</a></li>
+        <li><a href="dashboard.html">Inicio</a></li>
         <li><a href="ventas.html" class="active">Ventas</a></li>
         <li><a href="inventario.html">Inventario</a></li>
-        <li><a href="clientes.html">Clientes</a></li>
+        <li><a href="graficas.html">Gráficas de ventas</a></li>
+        <li style="margin-left:20px;"><a href="#" id="logout">Cerrar sesión</a></li>
       </ul>
     </nav>
   </header>
 
   <main class="content">
     <h2>Registrar Venta</h2>
-    <form class="form">
-      <input type="text" placeholder="Nombre del producto" required>
-      <input type="number" placeholder="Cantidad" required>
-      <input type="number" placeholder="Precio unitario" required>
+    <form class="form" id="saleForm">
+      <input type="text" placeholder="Nombre del producto" required />
+      <input type="number" placeholder="Cantidad" required />
+      <input type="number" placeholder="Precio unitario" required />
       <button type="submit" class="btn">Registrar</button>
     </form>
 
     <table>
       <thead>
-        <tr>
-          <th>Producto</th>
-          <th>Cantidad</th>
-          <th>Precio</th>
-          <th>Total</th>
-        </tr>
+        <tr><th>Producto</th><th>Cantidad</th><th>Precio</th><th>Total</th></tr>
       </thead>
-      <tbody>
-        <tr>
-          <td>Ejemplo 1</td>
-          <td>2</td>
-          <td>$10.000</td>
-          <td>$20.000</td>
-        </tr>
+      <tbody id="salesBody">
+        <!-- filas de ejemplo -->
       </tbody>
     </table>
   </main>
 
-  <footer>
-    <p>© 2025 EmprendePOS</p>
-  </footer>
+  <footer><p>© 2025 EmprendePOS</p></footer>
+
+  <script>
+    document.getElementById("logout").addEventListener("click", function(e){
+      e.preventDefault();
+      sessionStorage.removeItem("spos_user");
+      window.location.href = "index.html";
+    });
+
+    // Lógica mínima para añadir filas de venta (solo en memoria durante la sesión)
+    const saleForm = document.getElementById("saleForm");
+    const salesBody = document.getElementById("salesBody");
+    saleForm.addEventListener("submit", function(e){
+      e.preventDefault();
+      const producto = saleForm.querySelector('input[type="text"]').value;
+      const cantidad = Number(saleForm.querySelectorAll('input[type="number"]')[0].value);
+      const precio = Number(saleForm.querySelectorAll('input[type="number"]')[1].value);
+      const total = cantidad * precio;
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td>${producto}</td><td>${cantidad}</td><td>$${precio.toLocaleString()}</td><td>$${total.toLocaleString()}</td>`;
+      salesBody.appendChild(tr);
+
+      saleForm.reset();
+    });
+  </script>
 </body>
 </html>

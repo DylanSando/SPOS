@@ -1,20 +1,52 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Login - EmprendePOS</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body class="login-body">
   <div class="login-container">
     <h2>Iniciar Sesión</h2>
-    <form>
-      <input type="text" placeholder="Usuario" required>
-      <input type="password" placeholder="Contraseña" required>
+    <form id="loginForm">
+      <input id="user" type="text" placeholder="Usuario" required />
+      <input id="pass" type="password" placeholder="Contraseña" required />
       <button type="submit" class="btn">Entrar</button>
     </form>
+
+    <p id="error" style="color:#b00020; margin-top:10px; display:none;">Usuario o contraseña incorrectos.</p>
+
     <a href="index.html" class="back-link">Volver al inicio</a>
   </div>
+
+  <script>
+    // Credenciales falsas fijas
+    const VALID_USER = "Sportenis";
+    const VALID_PASS = "12345";
+
+    const form = document.getElementById("loginForm");
+    const err = document.getElementById("error");
+
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const user = document.getElementById("user").value.trim();
+      const pass = document.getElementById("pass").value.trim();
+
+      if (user === VALID_USER && pass === VALID_PASS) {
+        // Guardamos "sesión" en sessionStorage (solo durante la pestaña)
+        sessionStorage.setItem("spos_user", user);
+        // Redirigir al dashboard
+        window.location.href = "dashboard.html";
+      } else {
+        err.style.display = "block";
+      }
+    });
+
+    // Si ya estás logueado, redirigir directo al dashboard
+    if (sessionStorage.getItem("spos_user")) {
+      window.location.href = "dashboard.html";
+    }
+  </script>
 </body>
 </html>

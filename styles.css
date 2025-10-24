@@ -36,6 +36,9 @@
     color: white;
     font-weight: 500;
   }
+  .hero a.btn {
+    color: white !important;
+  }
   
   nav a.active, nav a:hover {
     color: #d0e7ff;
@@ -59,19 +62,6 @@
     margin-bottom: 25px;
   }
   
-  .btn {
-    background: #007bff;
-    color: white;
-    padding: 12px 25px;
-    border-radius: 25px;
-    text-decoration: none;
-    font-weight: bold;
-    transition: background 0.3s;
-  }
-  
-  .btn:hover {
-    background: #0056b3;
-  }
   
   /* Sección de características */
 .features {
@@ -242,4 +232,8 @@ html, body {
     transform: scale(1.15);
     filter: brightness(1.2);
   }
+ 
+  
+
+
   

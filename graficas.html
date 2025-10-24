@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gráficas - EmprendePOS</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <script>
+    if (!sessionStorage.getItem("spos_user")) {
+      window.location.href = "login.html";
+    }
+  </script>
+
+  <header>
+    <div class="logo"><h1>EmprendePOS</h1></div>
+    <nav>
+      <ul>
+        <li><a href="dashboard.html">Inicio</a></li>
+        <li><a href="ventas.html">Ventas</a></li>
+        <li><a href="inventario.html">Inventario</a></li>
+        <li><a href="graficas.html" class="active">Gráficas de ventas</a></li>
+        <li style="margin-left:20px;"><a href="#" id="logoutG">Cerrar sesión</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="content" style="padding:40px;">
+    <h2>Gráfica de ventas (ejemplo)</h2>
+    <canvas id="chart" width="800" height="350" style="max-width:100%; border:1px solid #eee; background:#fff;"></canvas>
+  </main>
+
+  <footer><p>© 2025 EmprendePOS</p></footer>
+
+  <script>
+    document.getElementById("logoutG").addEventListener("click", function(e){
+      e.preventDefault();
+      sessionStorage.removeItem("spos_user");
+      window.location.href = "index.html";
+    });
+
+    // Datos ficticios para la gráfica
+    const months = ["Ene","Feb","Mar","Abr","May","Jun"];
+    const sales = [120, 180, 150, 220, 260, 300];
+
+    // Dibujo simple de barras con canvas
+    const canvas = document.getElementById("chart");
+    const ctx = canvas.getContext("2d");
+    const padding = 50;
+    const chartWidth = canvas.width - padding*2;
+    const chartHeight = canvas.height - padding*2;
+    const maxVal = Math.max(...sales) * 1.1;
+
+    // Ejes
+    ctx.translate(padding, padding);
+    ctx.fillStyle = "#333";
+    ctx.font = "12px Poppins";
+
+    // Dibujar barras
+    const barWidth = chartWidth / sales.length * 0.6;
+    const gap = (chartWidth / sales.length) - barWidth;
+
+    sales.forEach((v,i) => {
+      const x = i * (barWidth + gap) + gap/2;
+      const h = (v / maxVal) * chartHeight;
+      const y = chartHeight - h;
+      // barra
+      ctx.fillStyle = "#007bff";
+      ctx.fillRect(x, y, barWidth, h);
+      // valor
+      ctx.fillStyle = "#222";
+      ctx.fillText(v, x + barWidth/2 - 10, y - 8);
+      // etiqueta
+      ctx.fillText(months[i], x + barWidth/2 - 10, chartHeight + 18);
+    });
+
+    // Línea base
+    ctx.strokeStyle = "#ddd";
+    ctx.beginPath();
+    ctx.moveTo(0, chartHeight);
+    ctx.lineTo(chartWidth, chartHeight);
+    ctx.stroke();
+  </script>
+</body>
+</html>
