@@ -1,62 +1,202 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Inventario - EmprendePOS</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    body {
+      background: linear-gradient(to bottom right, #f6f9ff, #eaf2ff);
+      color: #333;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    header {
+      background: #007bff;
+      color: white;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .content {
+      padding: 50px 20px;
+      animation: fadeInUp 1s ease;
+    }
+
+    .content h2 {
+      text-align: center;
+      font-size: 2rem;
+      color: #0056b3;
+      margin-bottom: 40px;
+    }
+
+    /* Tabla */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 40px;
+      box-shadow: 0 8px 20px rgba(0, 123, 255, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+      background: white;
+    }
+
+    th {
+      background: #007bff;
+      color: white;
+      padding: 12px;
+      text-align: left;
+    }
+
+    td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    tr:hover {
+      background: #f5f9ff;
+    }
+
+    /* Contenedor de la gráfica */
+    .chart-container {
+      background: white;
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 123, 255, 0.1);
+      margin-top: 40px;
+      animation: fadeInUp 1s ease;
+    }
+
+    .chart-container h3 {
+      text-align: center;
+      color: #007bff;
+      margin-bottom: 20px;
+    }
+
+    canvas {
+      width: 100% !important;
+      height: 350px !important;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px 0;
+      background: #007bff;
+      color: white;
+      margin-top: 50px;
+    }
+  </style>
 </head>
 <body>
-  <script>
-    if (!sessionStorage.getItem("spos_user")) {
-      window.location.href = "login.html";
-    }
-  </script>
   <header>
-    <div class="logo">
-      <h1>EmprendePOS</h1>
-    </div>
+    <div class="logo"><h1>EmprendePOS</h1></div>
     <nav>
       <ul>
         <li><a href="dashboard.html">Inicio</a></li>
-        <li><a href="ventas.html" class="active">Ventas</a></li>
-        <li><a href="inventario.html">Inventario</a></li>
-        <li><a href="graficas.html">Gráficas de ventas</a></li>
-        <li style="margin-left:20px;"><a href="#" id="logout">Cerrar sesión</a></li>
+        <li><a href="ventas.html">Ventas</a></li>
+        <li><a href="inventario.html" class="active">Inventario</a></li>
+        <li><a href="graficas.html">Gráficas</a></li>
+        <li><a href="index.html">Cerrar sesión</a></li>
       </ul>
     </nav>
   </header>
 
   <main class="content">
-    <h2>Inventario de Productos</h2>
+    <h2>📦 Control de Inventario</h2>
+
     <table>
       <thead>
         <tr>
-          <th>ID</th>
           <th>Producto</th>
+          <th>Categoría</th>
+          <th>Precio (COP)</th>
           <th>Stock</th>
-          <th>Precio</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>001</td>
-          <td>Zapatillas deportivas</td>
-          <td>15</td>
-          <td>$80.000</td>
-        </tr>
-        <tr>
-          <td>002</td>
-          <td>Camisa deportiva</td>
-          <td>8</td>
-          <td>$50.000</td>
-        </tr>
+        <tr><td>Zapatillas deportivas</td><td>Calzado</td><td>180,000</td><td>25</td></tr>
+        <tr><td>Camisas deportivas</td><td>Ropa</td><td>90,000</td><td>40</td></tr>
+        <tr><td>Balones de fútbol</td><td>Accesorios</td><td>75,000</td><td>30</td></tr>
+        <tr><td>Gorras</td><td>Accesorios</td><td>50,000</td><td>15</td></tr>
+        <tr><td>Pantalonetas</td><td>Ropa</td><td>85,000</td><td>22</td></tr>
+        <tr><td>Guantes deportivos</td><td>Accesorios</td><td>60,000</td><td>12</td></tr>
+        <tr><td>Chaquetas deportivas</td><td>Ropa</td><td>150,000</td><td>10</td></tr>
       </tbody>
     </table>
+
+    <!-- Gráfica del inventario -->
+    <div class="chart-container">
+      <h3>Gráfica de Stock Actual</h3>
+      <canvas id="stockChart"></canvas>
+    </div>
   </main>
 
   <footer>
-    <p>© 2025 EmprendePOS</p>
+    <p>© 2025 EmprendePOS | Panel de Inventario - Sportenis</p>
   </footer>
+
+  <script>
+    // === Datos para la gráfica ===
+    const productos = [
+      'Zapatillas deportivas',
+      'Camisas deportivas',
+      'Balones de fútbol',
+      'Gorras',
+      'Pantalonetas',
+      'Guantes deportivos',
+      'Chaquetas deportivas'
+    ];
+
+    const stock = [25, 40, 30, 15, 22, 12, 10];
+
+    // === Gráfica de barras (Stock) ===
+    new Chart(document.getElementById('stockChart'), {
+      type: 'bar',
+      data: {
+        labels: productos,
+        datasets: [{
+          label: 'Cantidad en stock',
+          data: stock,
+          backgroundColor: [
+            '#007bff', '#00a8ff', '#3dd9b5', '#66d9ff', '#89e0ff', '#b3e8ff', '#d0f0ff'
+          ],
+          borderRadius: 10,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          title: {
+            display: false
+          }
+        },
+        animation: {
+          duration: 1200,
+          easing: 'easeOutQuart'
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { color: '#333' },
+            grid: { color: '#e5e5e5' }
+          },
+          x: {
+            ticks: { color: '#333' },
+            grid: { display: false }
+          }
+        }
+      }
+    });
+  </script>
 </body>
 </html>
